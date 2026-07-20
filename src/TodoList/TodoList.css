@@ -108,7 +108,7 @@ ul li {
 }
 
 .TodoList__TodoInput {
-    width: calc(100% - 7.5px);
+    width: calc(100% - 8px);
 }
 
 @media screen and (max-width: 768px) {
