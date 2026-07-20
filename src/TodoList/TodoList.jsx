@@ -1,6 +1,7 @@
 import Todo from "./Todo";
 import "./TodoList.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useId } from "react";
+import { v4 as uuidv4 } from "uuid";
 
 function TodoList() {
     const [firstRender, setFirstRender] = useState(true);
@@ -80,7 +81,7 @@ function TodoList() {
                         }
                         setTodos((todos) => [
                             ...todos,
-                            { title: todoTitle, id: counter },
+                            { title: todoTitle, id: uuidv4() },
                         ]);
                         setCounter((counter) => counter + 1);
                         setTodoTitle("");

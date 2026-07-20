@@ -7,7 +7,7 @@
 }
 
 .TodoList__Container {
-    background-color: lightblue;
+    background-color: rgb(255, 255, 255);
     padding: 8px;
     width: 700px;
     height: calc(90vh - 10vh - 8px);
