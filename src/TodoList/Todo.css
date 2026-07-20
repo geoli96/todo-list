@@ -5,3 +5,12 @@
     color: #0025ff;
     text-decoration: line-through;
 }
+
+.Todo__InlineInput {
+    width: calc(100% - 7.5px);
+}
+
+.Todo--editing {
+    width: 100%;
+    margin-left: 4px;
+}

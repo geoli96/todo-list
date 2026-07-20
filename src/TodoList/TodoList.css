@@ -35,10 +35,6 @@
     padding: 4px;
 }
 
-.TodoList__TodoPrioritizeButton--prioritized {
-    font-weight: 600;
-}
-
 ul {
     padding: 0px;
     margin: 0px;
@@ -78,6 +74,10 @@ ul li {
     flex: 1;
 }
 
+.TodoList__CheckboxTodoContainer--editing .TodoList__Checkbox {
+    display: none;
+}
+
 .TodoList__ListItemContent {
     display: flex;
     align-items: flex-start;
@@ -86,7 +86,7 @@ ul li {
     padding-right: 4px;
 }
 
-#todo-form {
+.TodoList__AddTodoForm {
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -103,12 +103,16 @@ ul li {
     align-self: flex-end;
 }
 
-#todo-name {
+.TodoList__TodoPrioritizeButton {
+    text-wrap: nowrap;
+}
+
+.TodoList__TodoInput {
     width: calc(100% - 7.5px);
 }
 
 @media screen and (max-width: 768px) {
-    #todo-form button {
+    .TodoList__AddTodoForm button {
         width: 100%;
     }
     .TodoList__AddTodoButtonsContainer {

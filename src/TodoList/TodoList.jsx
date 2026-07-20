@@ -10,6 +10,8 @@ function TodoList() {
     const [completedTodos, setCompletedTodos] = useState([]);
     const [todoTitle, setTodoTitle] = useState("");
     const [showCompleted, setShowCompleted] = useState(true);
+    const [editing, setEditing] = useState(false);
+    const [editingValue, setEditingValue] = useState(null);
     const [counter, setCounter] = useState(1);
 
     useEffect(() => {
@@ -64,156 +66,6 @@ function TodoList() {
         );
     }, [prioritizedTodos, firstRender]);
 
-    const TodoListItem = ({ todo, prioritized }) => (
-        <li className="TodoList__ListItem">
-            <div className={"TodoList__ListItemContent"}>
-                <div className={"TodoList__CheckboxTodoContainer"}>
-                    <input
-                        type="checkbox"
-                        title="Todo completed checkbox"
-                        onChange={() => {
-                            const _todo = { ...todo };
-                            if (!prioritized) {
-                                setTodos((todos) => {
-                                    const removeIndex = todos.findIndex(
-                                        (t) => t.id === _todo.id,
-                                    );
-                                    return todos.toSpliced(removeIndex, 1);
-                                });
-                            } else {
-                                setPrioritizedTodos((todos) => {
-                                    const removeIndex = todos.findIndex(
-                                        (t) => t.id === _todo.id,
-                                    );
-                                    return todos.toSpliced(removeIndex, 1);
-                                });
-                            }
-                            setCompletedTodos((completedTodos) => {
-                                return [...completedTodos, _todo];
-                            });
-                        }}
-                    />
-                    <Todo title={todo.title} />
-                </div>
-                <div className={"TodoList__TodoActions"}>
-                    <div>
-                        <button
-                            className={`TodoList__TodoPrioritizeButton ${
-                                prioritized
-                                    ? " TodoList__TodoPrioritizeButton--prioritized"
-                                    : ""
-                            }`}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                const _todo = { ...todo };
-                                if (!prioritized) {
-                                    _todo.prioritized = true;
-                                } else {
-                                    delete _todo.prioritized;
-                                }
-                                setTodos((todos) => {
-                                    if (!prioritized) {
-                                        const removeIndex = todos.findIndex(
-                                            (t) => t.id === _todo.id,
-                                        );
-                                        return todos.toSpliced(removeIndex, 1);
-                                    }
-                                    return [...todos, _todo];
-                                });
-                                setPrioritizedTodos((prioritizedTodos) => {
-                                    if (!prioritized) {
-                                        return [...prioritizedTodos, _todo];
-                                    }
-                                    const removeIndex =
-                                        prioritizedTodos.findIndex(
-                                            (t) => t.id === _todo.id,
-                                        );
-                                    return prioritizedTodos.toSpliced(
-                                        removeIndex,
-                                        1,
-                                    );
-                                });
-                            }}
-                        >
-                            Prioritize{prioritized ? "d" : ""}
-                        </button>
-                    </div>
-                    <div>
-                        <button
-                            onClick={() => {
-                                if (!prioritized) {
-                                    setTodos((todos) => {
-                                        const removeIndex = todos.findIndex(
-                                            (t) => t.id === todo.id,
-                                        );
-                                        return todos.toSpliced(removeIndex, 1);
-                                    });
-                                } else {
-                                    setPrioritizedTodos((todos) => {
-                                        const removeIndex = todos.findIndex(
-                                            (t) => t.id === todo.id,
-                                        );
-                                        return todos.toSpliced(removeIndex, 1);
-                                    });
-                                }
-                            }}
-                        >
-                            Delete
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </li>
-    );
-    const CompletedTodoListItem = ({ todo }) => (
-        <li className="TodoList__ListItem">
-            <div className="TodoList__ListItemContent">
-                <div className="TodoList__CheckboxTodoContainer">
-                    <input
-                        type="checkbox"
-                        title="Todo completed checkbox"
-                        checked
-                        onChange={() => {
-                            const _todo = { ...todo };
-                            setCompletedTodos((completedTodos) => {
-                                const removeIndex = completedTodos.findIndex(
-                                    (t) => t.id === _todo.id,
-                                );
-                                return completedTodos.toSpliced(removeIndex, 1);
-                            });
-                            if (!_todo.prioritized) {
-                                setTodos((todos) => {
-                                    return [...todos, _todo];
-                                });
-                            } else {
-                                setPrioritizedTodos((todos) => {
-                                    return [...todos, _todo];
-                                });
-                            }
-                        }}
-                    />
-                    <Todo completed={true} title={todo.title} />
-                </div>
-                <div className="TodoList__TodoActions">
-                    <div>
-                        <button
-                            onClick={() =>
-                                setCompletedTodos((todos) => {
-                                    const removeIndex = todos.findIndex(
-                                        (t) => t.id === todo.id,
-                                    );
-                                    return todos.toSpliced(removeIndex, 1);
-                                })
-                            }
-                        >
-                            Delete
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </li>
-    );
-
     return (
         <div className={"TodoList"}>
             <div className={"TodoList__Container"}>
@@ -241,6 +93,7 @@ function TodoList() {
                             type="text"
                             placeholder="Enter todo"
                             size={undefined}
+                            className="TodoList__TodoInput"
                             name="todo-name"
                             id="todo-name"
                             value={todoTitle}
@@ -299,6 +152,13 @@ function TodoList() {
                                         <CompletedTodoListItem
                                             key={todo.id}
                                             todo={todo}
+                                            setTodos={setTodos}
+                                            setCompletedTodos={
+                                                setCompletedTodos
+                                            }
+                                            setPrioritizedTodos={
+                                                setPrioritizedTodos
+                                            }
                                         />
                                     ))}{" "}
                                 </ul>
@@ -309,8 +169,18 @@ function TodoList() {
                                         <TodoListItem
                                             key={todo.id}
                                             todo={todo}
-                                            i={i}
                                             prioritized={true}
+                                            setTodos={setTodos}
+                                            setCompletedTodos={
+                                                setCompletedTodos
+                                            }
+                                            setPrioritizedTodos={
+                                                setPrioritizedTodos
+                                            }
+                                            editing={editing}
+                                            editingValue={editingValue}
+                                            setEditingValue={setEditingValue}
+                                            setEditing={setEditing}
                                         />
                                     ))}
                                 </ul>
@@ -321,8 +191,18 @@ function TodoList() {
                                         <TodoListItem
                                             key={todo.id}
                                             todo={todo}
-                                            i={i}
                                             prioritized={false}
+                                            setTodos={setTodos}
+                                            setCompletedTodos={
+                                                setCompletedTodos
+                                            }
+                                            setPrioritizedTodos={
+                                                setPrioritizedTodos
+                                            }
+                                            editing={editing}
+                                            editingValue={editingValue}
+                                            setEditingValue={setEditingValue}
+                                            setEditing={setEditing}
                                         />
                                     ))}
                                 </ul>
@@ -332,6 +212,235 @@ function TodoList() {
                 </div>
             </div>
         </div>
+    );
+}
+
+function CompletedTodoListItem({
+    todo,
+    setTodos,
+    setCompletedTodos,
+    setPrioritizedTodos,
+}) {
+    return (
+        <li className="TodoList__ListItem">
+            <div className="TodoList__ListItemContent">
+                <div className={`TodoList__CheckboxTodoContainer`}>
+                    <input
+                        type="checkbox"
+                        title="Todo completed checkbox"
+                        checked
+                        onChange={() => {
+                            const _todo = { ...todo };
+                            setCompletedTodos((completedTodos) => {
+                                const removeIndex = completedTodos.findIndex(
+                                    (t) => t.id === _todo.id,
+                                );
+                                return completedTodos.toSpliced(removeIndex, 1);
+                            });
+                            if (!_todo.prioritized) {
+                                setTodos((todos) => {
+                                    return [...todos, _todo];
+                                });
+                            } else {
+                                setPrioritizedTodos((todos) => {
+                                    return [...todos, _todo];
+                                });
+                            }
+                        }}
+                    />
+                    <Todo completed={true} title={todo.title} id={todo.id} />
+                </div>
+                <div className="TodoList__TodoActions">
+                    <div>
+                        <button
+                            onClick={() =>
+                                setCompletedTodos((todos) => {
+                                    const removeIndex = todos.findIndex(
+                                        (t) => t.id === todo.id,
+                                    );
+                                    return todos.toSpliced(removeIndex, 1);
+                                })
+                            }
+                        >
+                            Delete
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </li>
+    );
+}
+
+function TodoListItem({
+    todo,
+    prioritized,
+    setTodos,
+    setCompletedTodos,
+    setPrioritizedTodos,
+    editing,
+    editingValue,
+    setEditing,
+    setEditingValue,
+}) {
+    return (
+        <li className="TodoList__ListItem">
+            <div className={"TodoList__ListItemContent"}>
+                <div
+                    className={`TodoList__CheckboxTodoContainer ${editing === todo.id ? "TodoList__CheckboxTodoContainer--editing" : ""}`}
+                >
+                    <input
+                        type="checkbox"
+                        className="TodoList__Checkbox"
+                        title="Todo completed checkbox"
+                        onChange={() => {
+                            const _todo = { ...todo };
+                            if (!prioritized) {
+                                setTodos((todos) => {
+                                    const removeIndex = todos.findIndex(
+                                        (t) => t.id === _todo.id,
+                                    );
+                                    return todos.toSpliced(removeIndex, 1);
+                                });
+                            } else {
+                                setPrioritizedTodos((todos) => {
+                                    const removeIndex = todos.findIndex(
+                                        (t) => t.id === _todo.id,
+                                    );
+                                    return todos.toSpliced(removeIndex, 1);
+                                });
+                            }
+                            setCompletedTodos((completedTodos) => {
+                                return [...completedTodos, _todo];
+                            });
+                        }}
+                    />
+                    <Todo
+                        editing={editing}
+                        editingValue={editingValue}
+                        id={todo.id}
+                        setEditingValue={setEditingValue}
+                        title={todo.title}
+                    />
+                </div>
+                <div className={"TodoList__TodoActions"}>
+                    <button
+                        onClick={() => {
+                            if (!editing || editing !== todo.id) {
+                                setEditingValue(todo.title);
+                                setEditing(todo.id);
+                            } else {
+                                if (!editingValue) {
+                                    return;
+                                }
+                                if (!prioritized) {
+                                    setTodos((todos) => {
+                                        const changeIndex = todos.findIndex(
+                                            (t) => t.id === todo.id,
+                                        );
+                                        todos[changeIndex].title = editingValue;
+                                        return [...todos];
+                                    });
+                                } else {
+                                    setPrioritizedTodos((todos) => {
+                                        const changeIndex = todos.findIndex(
+                                            (t) => t.id === todo.id,
+                                        );
+                                        todos[changeIndex].title = editingValue;
+                                        return [...todos];
+                                    });
+                                }
+                                setEditingValue("");
+                                setEditing(null);
+                            }
+                        }}
+                    >
+                        {editing === todo.id ? "Save" : "Edit"}
+                    </button>
+                    {editing === todo.id ? (
+                        <button
+                            onClick={() => {
+                                setEditingValue("");
+                                setEditing(null);
+                            }}
+                        >
+                            Cancel
+                        </button>
+                    ) : null}
+                    {editing !== todo.id ? (
+                        <>
+                            <button
+                                className={`TodoList__TodoPrioritizeButton`}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    const _todo = { ...todo };
+                                    if (!prioritized) {
+                                        _todo.prioritized = true;
+                                    } else {
+                                        delete _todo.prioritized;
+                                    }
+                                    setTodos((todos) => {
+                                        if (!prioritized) {
+                                            const removeIndex = todos.findIndex(
+                                                (t) => t.id === _todo.id,
+                                            );
+                                            return todos.toSpliced(
+                                                removeIndex,
+                                                1,
+                                            );
+                                        }
+                                        return [...todos, _todo];
+                                    });
+                                    setPrioritizedTodos((prioritizedTodos) => {
+                                        if (!prioritized) {
+                                            return [...prioritizedTodos, _todo];
+                                        }
+                                        const removeIndex =
+                                            prioritizedTodos.findIndex(
+                                                (t) => t.id === _todo.id,
+                                            );
+                                        return prioritizedTodos.toSpliced(
+                                            removeIndex,
+                                            1,
+                                        );
+                                    });
+                                }}
+                            >
+                                {prioritized
+                                    ? "Prioritised"
+                                    : "Set as priority"}
+                            </button>
+                            <button
+                                onClick={() => {
+                                    if (!prioritized) {
+                                        setTodos((todos) => {
+                                            const removeIndex = todos.findIndex(
+                                                (t) => t.id === todo.id,
+                                            );
+                                            return todos.toSpliced(
+                                                removeIndex,
+                                                1,
+                                            );
+                                        });
+                                    } else {
+                                        setPrioritizedTodos((todos) => {
+                                            const removeIndex = todos.findIndex(
+                                                (t) => t.id === todo.id,
+                                            );
+                                            return todos.toSpliced(
+                                                removeIndex,
+                                                1,
+                                            );
+                                        });
+                                    }
+                                }}
+                            >
+                                Delete
+                            </button>
+                        </>
+                    ) : null}
+                </div>
+            </div>
+        </li>
     );
 }
 
