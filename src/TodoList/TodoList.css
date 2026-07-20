@@ -1,0 +1,123 @@
+.TodoList {
+    margin: auto;
+    width: min-content;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 5vh;
+}
+
+.TodoList__Container {
+    background-color: lightblue;
+    padding: 8px;
+    width: 700px;
+    height: calc(90vh - 10vh - 8px);
+    overflow: auto;
+}
+
+.TodoList__TitleAndShowCompletedContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px;
+    margin-bottom: 8px;
+    gap: 4px;
+}
+
+.TodosCompleted {
+    margin-top: 8px;
+}
+
+.TodoList__ListTitle {
+    margin: 0px;
+}
+
+.TodoList__AddTodoForm {
+    padding: 4px;
+}
+
+.TodoList__TodoPrioritizeButton--prioritized {
+    font-weight: 600;
+}
+
+ul {
+    padding: 0px;
+    margin: 0px;
+}
+
+.TodoList__ListItem--noneAdded {
+    margin-left: 4px;
+}
+
+ul li {
+    list-style-type: none;
+}
+
+.TodoList__ListItem {
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.TodoList__ShowCompletedButton--noneCompleted {
+    display: none;
+}
+
+.ListItem--noneAdded {
+    margin-top: 4px;
+}
+
+.TodoList__TodoActions {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: 4px;
+}
+
+.TodoList__CheckboxTodoContainer {
+    display: flex;
+    align-items: flex-start;
+    flex: 1;
+}
+
+.TodoList__ListItemContent {
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+    padding-left: 0;
+    padding-right: 4px;
+}
+
+#todo-form {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.TodoList__AddTodoButtonsContainer {
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+}
+
+.TodoList__AddTodoFormSubmitButton {
+    text-wrap: nowrap;
+    align-self: flex-end;
+}
+
+#todo-name {
+    width: calc(100% - 7.5px);
+}
+
+@media screen and (max-width: 768px) {
+    #todo-form button {
+        width: 100%;
+    }
+    .TodoList__AddTodoButtonsContainer {
+        flex-direction: column;
+    }
+}
+
+@media screen and (max-width: 740px) {
+    .TodoList__Container {
+        width: calc(100vw - 20px - 20px);
+    }
+}

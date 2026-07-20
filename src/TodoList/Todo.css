@@ -1,0 +1,7 @@
+.Todo {
+    overflow-wrap: anywhere;
+}
+.Todo--completed {
+    color: #0025ff;
+    text-decoration: line-through;
+}
