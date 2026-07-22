@@ -4,13 +4,14 @@ function Todo({
     id,
     title,
     completed,
+    prioritized,
     editing,
     editingValue,
     setEditingValue,
 }) {
     return (
         <div
-            className={`Todo ${completed ? "Todo--completed" : ""} ${editing ? "Todo--editing" : ""}`}
+            className={`Todo ${completed ? "Todo--completed" : ""} ${editing === id ? "Todo--editing" : ""}`}
         >
             {editing !== id ? (
                 title

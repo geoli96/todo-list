@@ -3,6 +3,33 @@ html {
     background-color: #253259;
 }
 
+* {
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 body {
     margin: 0;
+}
+
+.Links__Container {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin: 0.8rem;
+    z-index: 1000;
+}
+
+.Links__Container a {
+    text-decoration: none;
+    color: white;
+    cursor: pointer;
+}
+
+.Links__Container a:visited {
+    color: white;
+}
+
+.Links__Container a:first-of-type {
+    margin-right: 8px;
 }
