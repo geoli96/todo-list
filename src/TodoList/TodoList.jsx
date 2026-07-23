@@ -13,6 +13,28 @@ function TodoList() {
     const [showCompleted, setShowCompleted] = useState(true);
     const [editing, setEditing] = useState(false);
     const [editingValue, setEditingValue] = useState(null);
+    const [mobileView,setMobileView] = useState(false);
+    const [openMenu,setOpenMenu] = useState(false);
+
+    useEffect(() => {
+        if(window.innerWidth <= 768){
+            setMobileView(true)
+            setOpenMenu(false)
+        }else{
+            setMobileView(false)
+            setOpenMenu(false)
+        }
+        window.addEventListener("resize", function () {
+            // check width
+            if(window.innerWidth <= 768){
+                setMobileView(true)
+                setOpenMenu(false)
+            }else{
+                setMobileView(false)
+                setOpenMenu(false)
+            }
+        });
+    },[])
 
     useEffect(() => {
         const todos = localStorage.getItem("todos");
@@ -182,14 +204,16 @@ function TodoList() {
                                                 setEditingValue={
                                                     setEditingValue
                                                 }
+                                                openMenu={openMenu}
+                                                setOpenMenu={setOpenMenu}
+                                                mobileView={mobileView}
                                                 setEditing={setEditing}
                                             />
                                         ))}
                                     </ul>
                                 </>
                             ) : null}
-                            {todos.length || true ? (
-                                <>
+                            
                                     <h4 className="TodoList__SubListHeader">
                                         Todos
                                     </h4>
@@ -212,11 +236,13 @@ function TodoList() {
                                                     setEditingValue
                                                 }
                                                 setEditing={setEditing}
+                                                openMenu={openMenu}
+                                                setOpenMenu={setOpenMenu}
+                                                mobileView={mobileView}
                                             />
                                         ))}
                                     </ul>
-                                </>
-                            ) : null}
+                                
                         </ul>
                     )}
                 </div>
@@ -286,12 +312,15 @@ function TodoListItem({
     todo,
     prioritized,
     setTodos,
-    setCompletedTodos,
+    setCompletedTodos,  
     setPrioritizedTodos,
     editing,
     editingValue,
     setEditing,
     setEditingValue,
+    openMenu,
+    setOpenMenu,
+    mobileView
 }) {
     return (
         <li className="TodoList__ListItem">
@@ -335,7 +364,17 @@ function TodoListItem({
                     />
                 </div>
                 <div className={"TodoList__TodoActions"}>
-                    {true ? (
+                    {mobileView && editing !== todo.id ? (
+                                <button
+                                    onClick={() => {
+                                        setOpenMenu(openMenu === todo.id ? false : todo.id)
+                                    }}
+                                >
+                                   {openMenu === todo.id ? "Close menu" : "Open menu"}
+                                    
+                                </button>
+                            ) : null}
+                    {!mobileView || openMenu === todo.id || editing === todo.id ? (
                         <>
                             <button
                                 onClick={() => {
